@@ -4,6 +4,32 @@ public class DragonCave implements Comparable<DragonCave> {
 	private Double depth; //Поле не может быть null
 	private Float numberOfTreasures; //Поле может быть null, Значение поля должно быть больше 0
 	
+	public DragonCave() {
+		throw new IllegalArgumentException("Error! Depth can't be null");
+	}
+
+	public DragonCave(double depth, float numberOfTreasures) {
+		this.depth = Double.valueOf(depth);
+		if (numberOfTreasures <= 0) {
+			throw new IllegalArgumentException("Error! Number of Treasures should be more than 0");
+		}
+		this.numberOfTreasures = Float.valueOf(numberOfTreasures);
+	}
+	
+	public DragonCave(Double depth, Float numberOfTreasures) {
+		if (depth == null) {
+			throw new IllegalArgumentException("Error! Depth can't be null");
+		}
+		this.depth = Double.valueOf(depth);
+		if (numberOfTreasures != null && numberOfTreasures.floatValue() <= 0) {
+			throw new IllegalArgumentException("Error! Number of Treasures should be more than 0");
+		}
+		if (numberOfTreasures != null)
+		{
+			this.numberOfTreasures = Float.valueOf(numberOfTreasures);
+		}
+	}
+
 	public double getDepth() {
 		return depth.doubleValue();
 	}
@@ -41,5 +67,9 @@ public class DragonCave implements Comparable<DragonCave> {
 			return 1;
 		}
 		return 0;
+	}
+	@Override
+	public String toString() {
+		return "depth:" + depth.toString() + ";number of treasures:" + (numberOfTreasures == null ? "null" : numberOfTreasures.toString());
 	}
 }

@@ -3,13 +3,43 @@ package ru.se.ifmo.prog.lab5.classes;
 public class Coordinates implements Comparable<Coordinates> {
 	private Integer x; //Значение поля должно быть больше -32, Поле не может быть null
 	private Float y; //Поле не может быть null
-			 
+			
+	public Coordinates(int x, float y) {
+		if (x <= -32) {
+			throw new IllegalArgumentException("Error! X value should be greater than -32");
+		}
+		this.x = Integer.valueOf(x);
+		this.y = Float.valueOf(y);
+	}
+
+	public Coordinates(Integer x, Float y) {
+		if (x == null) {
+			throw new IllegalArgumentException("Error! X value can't be null");
+		}
+		if (x.intValue() <= -32) {
+			throw new IllegalArgumentException("Error! X value should be greater than -32");
+		}
+		this.x = Integer.valueOf(x);
+		if (y == null) {
+			throw new IllegalArgumentException("Error! Y value can't be null");
+		}
+		this.y = Float.valueOf(y);
+	}
+
 	public int getX() {
 		return this.x.intValue();
 	}
 	
 	public float getY() {
 		return this.y.floatValue();
+	}
+	public Integer getXPtr()
+	{
+		return this.x;
+	}
+	public Float getYPtr()
+	{
+		return this.y;
 	}
 	@Override
 	public boolean equals(Object other) {
@@ -42,5 +72,9 @@ public class Coordinates implements Comparable<Coordinates> {
 			return 1;
 		}
 		return 0;
+	}
+	@Override
+	public String toString() {
+		return "x:" + x.toString() + ";y:" + y.toString();
 	}
 }

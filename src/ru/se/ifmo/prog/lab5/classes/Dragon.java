@@ -35,7 +35,7 @@ public class Dragon implements Comparable<Dragon> {
 	}	
 	
 	private void setCoordinates(Coordinates coordinates) {
-		if (coordinates == null) {
+		if (coordinates == null || coordinates.getXPtr() == null || coordinates.getYPtr() == null) {
 			throw new IllegalArgumentException("Error! Coordinates can't be null for dragon with name \"" + this.name + "\"");
 		}	
 		this.coordinates = coordinates;
@@ -112,6 +112,12 @@ public class Dragon implements Comparable<Dragon> {
 	@Override
 	public int compareTo(Dragon otherDragon)
 	{
+		if (this.id > otherDragon.getId()) {
+			return 1;
+		}
+		if (this.id < otherDragon.getId()) {
+			return -1;
+		}
 		if (!this.name.equals(otherDragon.getName())) {
 			return this.name.compareTo(otherDragon.getName()); 
 		}
@@ -141,4 +147,9 @@ public class Dragon implements Comparable<Dragon> {
 		}	
 		return 0;
 	}
+	@Override
+	public String toString() {
+		return "Dragon;ID:" + Integer.toString(id) + ";name:" + name + ";coordinates:" + coordinates.toString() + ";creation date:" + creationDate.toString() + ";age:" + Integer.toString(age) + ";color:" + (color == null ? "null" : color.toString()) + ";type:" + (type == null ? "null" : type.toString()) + ";character:" + (character == null ? "null" : character.toString()) + ";cave:" + (cave == null ? "null" : cave.toString());
+	}
 }
+
