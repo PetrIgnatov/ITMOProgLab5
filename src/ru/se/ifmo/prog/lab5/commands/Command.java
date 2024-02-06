@@ -7,6 +7,7 @@ public abstract class Command implements Executable {
 	String description;
 	CommandManager commandmanager;
 	Console console;
+	CollectionData collectiondata;
 	int argsnumber;
 
 	public Command(String name, String description, int argsnumber, CommandManager commandmanager, Console console) {
@@ -15,6 +16,15 @@ public abstract class Command implements Executable {
 		this.commandmanager = commandmanager;
 		this.console = console;
 		this.argsnumber = argsnumber;
+		this.collectiondata = null;
+	}
+	public Command(String name, String description, int argsnumber, CommandManager commandmanager, Console console, CollectionData collectiondata) {
+		this.name = name;
+		this.description = description;
+		this.commandmanager = commandmanager;
+		this.console = console;
+		this.argsnumber = argsnumber;
+		this.collectiondata = collectiondata;
 	}
 	public void check(int argsnumber) {
 		if (this.argsnumber != argsnumber) {

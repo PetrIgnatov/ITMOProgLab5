@@ -11,9 +11,14 @@ public class Main {
 		}
 		CollectionData collection = new CollectionData(args[0]);
 		CommandManager commandmanager = new CommandManager();
-		Console console = new Console();
+		Console console = new Console(commandmanager, collection);
 		commandmanager.createCommand("help", new Help(commandmanager, console));
+		commandmanager.createCommand("info", new Info(commandmanager, console));
+		commandmanager.createCommand("show", new Show(commandmanager, console));
+		commandmanager.createCommand("clear", new Clear(commandmanager, console, collection));
 		commandmanager.createCommand("exit", new Exit(commandmanager, console));
-		console.start(commandmanager);
+		commandmanager.createCommand("sort", new Sort(commandmanager, console, collection));
+		commandmanager.createCommand("history", new History(commandmanager, console));
+		console.start();
 	}
 }
