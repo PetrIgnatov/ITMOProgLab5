@@ -70,6 +70,6 @@ public class DragonCave implements Comparable<DragonCave> {
 	}
 	@Override
 	public String toString() {
-		return "depth:" + depth.toString() + ";number of treasures:" + (numberOfTreasures == null ? "null" : numberOfTreasures.toString());
+		return depth.toString() + ";" + (numberOfTreasures == null ? "" : numberOfTreasures.toString());
 	}
 }

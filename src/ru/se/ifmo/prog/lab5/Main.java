@@ -1,19 +1,19 @@
 package ru.se.ifmo.prog.lab5;
 import ru.se.ifmo.prog.lab5.classes.*;
+import ru.se.ifmo.prog.lab5.commands.*;
+import ru.se.ifmo.prog.lab5.cores.*;
 import java.util.*;
 
 public class Main {
 	public static void main(String[] args) {
-		Random rand = new Random();
-		LinkedList<Dragon> dr = new LinkedList<>();
-	       	for (int i = 0; i < 10; ++i) {
-			Dragon newdr = new Dragon(rand.nextInt(1000), "Another dragon", new Coordinates(1,2.0f), new java.util.Date(), 1, Color.GREEN, DragonType.WATER, DragonCharacter.EVIL, new DragonCave(Double.valueOf(100),null)); 
-			dr.add(newdr);
-			System.out.println(newdr.getId());
+		if (args.length != 1) {
+			throw new IllegalArgumentException("Error! Got " + Integer.valueOf(args.length) + " arguments when 1 required (file name)");
 		}
-		Collections.sort(dr);
-		for (int i = 0; i < 10; ++i) {
-			System.out.println(dr.get(i).toString());
-		}
+		CollectionData collection = new CollectionData(args[0]);
+		CommandManager commandmanager = new CommandManager();
+		Console console = new Console();
+		commandmanager.createCommand("help", new Help(commandmanager, console));
+		commandmanager.createCommand("exit", new Exit(commandmanager, console));
+		console.start(commandmanager);
 	}
 }

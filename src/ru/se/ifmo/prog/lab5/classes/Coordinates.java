@@ -75,6 +75,6 @@ public class Coordinates implements Comparable<Coordinates> {
 	}
 	@Override
 	public String toString() {
-		return "x:" + x.toString() + ";y:" + y.toString();
+		return x.toString() + ";" + y.toString();
 	}
 }

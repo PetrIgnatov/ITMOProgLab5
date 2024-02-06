@@ -22,7 +22,19 @@ public class Dragon implements Comparable<Dragon> {
 		this.setCharacter(character);
 		this.setCave(cave);	
 	}
-	
+
+	public Dragon(int id, String name, Integer x, Float y, java.util.Date creationDate, int age, Color color, DragonType type, DragonCharacter character, Double depth, Float numberOfTreasures) {
+		this.setId(id);
+		this.setName(name);
+		this.setCoordinates(new Coordinates(x, y));
+		this.setDate(creationDate);
+		this.setAge(age);
+		this.setColor(color);
+		this.setType(type);
+		this.setCharacter(character);
+		this.setCave(new DragonCave(depth, numberOfTreasures));	
+	}
+
 	private void setId(int id) {
 		this.id = id;
 	}
@@ -149,7 +161,7 @@ public class Dragon implements Comparable<Dragon> {
 	}
 	@Override
 	public String toString() {
-		return "Dragon;ID:" + Integer.toString(id) + ";name:" + name + ";coordinates:" + coordinates.toString() + ";creation date:" + creationDate.toString() + ";age:" + Integer.toString(age) + ";color:" + (color == null ? "null" : color.toString()) + ";type:" + (type == null ? "null" : type.toString()) + ";character:" + (character == null ? "null" : character.toString()) + ";cave:" + (cave == null ? "null" : cave.toString());
+		return Integer.toString(id) + ";" + name + ";" + coordinates.toString() + ";" + creationDate.toString() + ";" + Integer.toString(age) + ";" + (color == null ? "" : color.toString()) + ";" + (type == null ? "" : type.toString()) + ";" + (character == null ? "" : character.toString()) + ";" + (cave == null ? "" : cave.toString()) + ";";
 	}
 }
 
