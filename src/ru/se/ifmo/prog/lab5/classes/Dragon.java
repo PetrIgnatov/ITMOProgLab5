@@ -1,5 +1,7 @@
 package ru.se.ifmo.prog.lab5.classes;
 
+import java.util.Date;
+
 public class Dragon implements Comparable<Dragon> {
 	private int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
 	private String name; //Поле не может быть null, Строка не может быть пустой

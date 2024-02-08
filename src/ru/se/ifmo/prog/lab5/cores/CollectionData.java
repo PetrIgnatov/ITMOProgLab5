@@ -11,8 +11,11 @@ import java.util.Collections;
 public class CollectionData {
 	private LinkedList<Dragon> dragons;
 	private String filename;
-	private java.util.Date initDate;	
+	private java.util.Date initDate;
+	private int maxId;
+
 	public CollectionData(String filename) {
+		maxId = 0;
 		initDate = new java.util.Date();
 		this.filename = filename;
 		dragons = new LinkedList<Dragon>();
@@ -111,6 +114,12 @@ public class CollectionData {
 						SimpleDateFormat formater = new SimpleDateFormat(format, Locale.ENGLISH);
 						java.util.Date date = null;
 						date = formater.parse(splitted[4]);
+						maxId = Math.max(maxId, Integer.parseInt(splitted[0]));
+						for (int i = 0; i < dragons.size(); ++i) {
+							if (Integer.parseInt(splitted[0]) == dragons.get(i).getId()) {
+								throw new IOException("Error! Two dragons from file have the same IDs");
+							}
+						}
 						dragons.add(new Dragon(
 									Integer.parseInt(splitted[0]),
 									splitted[1] == "" ? null : splitted[1],
@@ -122,6 +131,9 @@ public class CollectionData {
 									splitted[9] == "" ? null : Double.parseDouble(splitted[9]),
 									splitted[10] == "" ? null : Float.parseFloat(splitted[10])));
 					}
+					catch (FileNotFoundException e) {
+						System.out.println("Error! File \"" + filename + "\"");
+					}
 					catch (Exception e) {
 						System.out.println(e.getMessage());
 					}
@@ -129,13 +141,32 @@ public class CollectionData {
 						inputDragon = "";
 					}
 				}
-			}	
+			}
+			reader.close();	
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 	
+	public void save() {
+		try {
+			FileOutputStream outputStream = new FileOutputStream(filename);
+			OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+			writer.flush();
+			if (dragons.size() > 0) {
+				for (int i = 0; i < dragons.size()-1; ++i) {
+					writer.write(dragons.get(i).toString()+"\n");
+				}
+				writer.write(dragons.getLast().toString()+"\n");
+				writer.close();
+			}
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
 	public LinkedList<Dragon> getDragons() {
 		return dragons;
 	}
@@ -143,9 +174,167 @@ public class CollectionData {
 	public void clear() {
 		dragons.clear();
 	}
+
 	public void sort() {
 		Collections.sort(dragons);
-	}	
+	}
+	
+	public Dragon createDragon(String[] splitted, int id) {
+		try {
+			Color col = null;
+			switch(splitted[4]) {
+				case "GREEN":
+					col = Color.GREEN;
+					break;
+				case "YELLOW":
+					col = Color.YELLOW;
+					break;
+				case "ORANGE":
+					col = Color.ORANGE;
+					break;
+				case "WHITE":
+					col = Color.WHITE;
+					break;	
+				case "":
+					col = null;
+					break;
+				default:
+					throw new IOException("Error! Unknown color \"" + splitted[4] + "\"");
+			}
+			DragonType type = null; 
+			switch(splitted[5]) {
+				case "WATER":
+					type = DragonType.WATER;
+					break;
+				case "UNDERGROUND":
+					type = DragonType.UNDERGROUND;	
+					break;
+				case "AIR":
+					type = DragonType.AIR;
+					break;
+				case "":
+					type = null;
+					break;
+				default:
+					throw new IOException("Error! Unknown type \"" + splitted[5] + "\"");
+			}
+			DragonCharacter character = null;
+			switch(splitted[6]) {
+				case "EVIL":
+					character = DragonCharacter.EVIL;
+					break;
+				case "GOOD":
+					character = DragonCharacter.GOOD;	
+					break;
+				case "CHAOTIC":
+					character = DragonCharacter.CHAOTIC;
+					break;
+				case "FICKLE":
+					character = DragonCharacter.FICKLE;	
+					break;
+				case "CHAOTIC_EVIL":
+					character = DragonCharacter.CHAOTIC_EVIL;
+					break;
+				case "":
+					character = null;
+					break;
+				default:
+					throw new IOException("Error! Unknown character \"" + splitted[6] + "\"");
+			}
+			String format = "EEE MMM dd HH:mm:ss z yyyy";
+			SimpleDateFormat formater = new SimpleDateFormat(format, Locale.ENGLISH);
+			java.util.Date date = new java.util.Date();
+			if (splitted[0] == "") {
+				throw new IOException("Error! Name can't be null");
+			}
+			if (splitted[3] == "") {
+				throw new IOException("Error! Age can't be null");
+			}
+			return new Dragon(
+					id,
+					splitted[0] == "" ? null : splitted[0],
+					splitted[1] == "" ? null : Integer.parseInt(splitted[1]),
+					splitted[2] == "" ? null : Float.parseFloat(splitted[2]),
+					date,
+					splitted[3] == "" ? null : Integer.parseInt(splitted[3]),
+					col,type,character,
+					splitted[7] == "" ? null : Double.parseDouble(splitted[7]),
+					splitted[8] == "" ? null : Float.parseFloat(splitted[8]));
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	public void add(String[] splitted) {
+		Dragon newDragon = createDragon(splitted, ++maxId);
+		if (newDragon != null) {
+			dragons.add(newDragon);
+		}
+	}
+
+	public void update(String[] parameters, int id) {
+		try {
+			boolean found = false;
+			for (int i = 0; i < dragons.size(); ++i) {
+				if (dragons.get(i).getId() == id) {
+					Dragon newDragon = createDragon(parameters, id);
+					if (newDragon != null) {
+						dragons.set(i, newDragon);
+					}
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				throw new IOException("Error! Dragon with ID " + id + " not found");
+			}
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void remove(int id) {
+		try {
+			boolean found = false;
+			for (int i = 0; i < dragons.size(); ++i) {
+				if (dragons.get(i).getId() == id) {
+					dragons.remove(i);
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				throw new IOException("Error! Dragon with ID " + id + " not found");
+			}
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void removeIndex(int index) {
+		try {
+			if (index < 0 || index >= dragons.size()) {
+				throw new IOException("Error! Invalid index");
+			}
+			dragons.remove(index);
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public int sumAge() {
+		int sum = 0;
+		for (Dragon dragon : dragons) {
+			sum += dragon.getAge();
+		}
+		return sum;
+	}
+
 	@Override
 	public String toString() {
 		return "LinkedList<Dragon>;" + initDate.toString() + ";" + Integer.toString(dragons.size()) + " elements;";
