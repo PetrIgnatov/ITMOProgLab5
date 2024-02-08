@@ -50,7 +50,6 @@ public class Console {
 	
 	public void getCommand(String line) {
 		if (active) {			
-			this.print("[GLaDOS]>");
 			String[] com = line.split(" ");
 			if (com.length > 0) {
 				try {
@@ -72,7 +71,6 @@ public class Console {
 	}
 
 	public void readCommand() {
-		this.print("[GLaDOS]>");
 		String[] com = scanner.nextLine().split(" ");
 		if (com.length > 0) {
 			try {
