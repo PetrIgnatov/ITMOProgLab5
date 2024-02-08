@@ -11,20 +11,22 @@ public class Console {
 	private CommandManager commandmanager;
 	private CollectionData collectiondata;
 	private LinkedList<Command> history;
-	private int depth;
+	private LinkedList<String> commandsStack;
+	private int stacksize;
 
 	public Console(CommandManager commandmanager, CollectionData collectiondata)
 	{
-		scanner = new Scanner(System.in);
-		active = true;
+		this.scanner = new Scanner(System.in);
+		this.active = true;
 		this.history = new LinkedList<Command>();
 		this.commandmanager = commandmanager;
 		this.collectiondata = collectiondata;
-		depth = 0;
+		this.commandsStack = new LinkedList<String>();
+		this.stacksize = 0;
 	}
 	
 	public void start() {
-		while (active) {
+		while (this.active) {
 			readCommand();
 		}
 	}
@@ -47,31 +49,17 @@ public class Console {
 		}
 		System.out.println(line);
 	}
-	
-	public void getCommand(String line) {
-		if (active) {			
-			String[] com = line.split(" ");
-			if (com.length > 0) {
-				try {
-					Command command = commandmanager.getCommand(com[0]);
-					if (command != null) {
-						history.push(command);
-						while (history.size() > 5) {
-							history.pollLast();
-						}
-					}
-					this.println(line);
-					command.execute(com);
-				}
-				catch (Exception e) {
-					System.out.println(e.getMessage());
-				}
-			}
-		}
-	}
 
 	public void readCommand() {
-		String[] com = scanner.nextLine().split(" ");
+		String[] com; 
+		if (commandsStack.size() == 0) {
+			stacksize = 0;
+			com = scanner.nextLine().split(" ");
+		}
+		else {
+			this.println(commandsStack.peek());
+			com = commandsStack.removeFirst().split(" ");
+		}
 		if (com.length > 0) {
 			try {
 				Command command = commandmanager.getCommand(com[0]);
@@ -90,7 +78,14 @@ public class Console {
 	}
 	
 	public String readln() {
-		return scanner.nextLine();
+		if (commandsStack.size() == 0) {
+			stacksize = 0;
+			return scanner.nextLine();
+		}
+		else {
+			this.println(commandsStack.peek());
+			return commandsStack.removeFirst();
+		}
 	}
 	
 	public void stop() {
@@ -114,16 +109,15 @@ public class Console {
 	}
 
 	public void readScript(String filename) {
-		if (depth < 5)
+		if (stacksize < 100)
 		{
 			try {	
 				ScriptReader scriptreader = new ScriptReader(filename);
 				String[] commands = scriptreader.readFile().split("\n");
-				++depth;
-				for (int i = 0; i < commands.length; ++i) {
-					this.getCommand(commands[i]);
+				for (int i = commands.length-1; i >= 0; i--) {
+					++stacksize;
+					commandsStack.offerFirst(commands[i]);
 				}
-				--depth;
 			}
 			catch (Exception e) {
 				System.out.println(e.getMessage());
@@ -131,7 +125,8 @@ public class Console {
 		}
 		else
 		{
-			System.out.println("Error! Look like your scripts is awakening in recursion. Try recoding it");
+			System.out.println("Error! Too many commands!");
 		}
 	}
 }
+
