@@ -19,9 +19,11 @@ public class CollectionData {
 		initDate = new java.util.Date();
 		this.filename = filename;
 		dragons = new LinkedList<Dragon>();
+		FileInputStream inputStream = null;
+		InputStreamReader reader = null;
 		try {
-			FileInputStream inputStream = new FileInputStream(filename);
-			InputStreamReader reader = new InputStreamReader(inputStream);
+			inputStream = new FileInputStream(filename);
+			reader = new InputStreamReader(inputStream);
 			int temp;
 			String inputDragon = "";
 			while ((temp = reader.read()) != -1) {
@@ -131,9 +133,6 @@ public class CollectionData {
 									splitted[9] == "" ? null : Double.parseDouble(splitted[9]),
 									splitted[10] == "" ? null : Float.parseFloat(splitted[10])));
 					}
-					catch (FileNotFoundException e) {
-						System.out.println("Error! File \"" + filename + "\"");
-					}
 					catch (Exception e) {
 						System.out.println(e.getMessage());
 					}
@@ -142,10 +141,25 @@ public class CollectionData {
 					}
 				}
 			}
-			reader.close();	
+		}
+		catch (FileNotFoundException e) {
+			System.out.println("Error! File \"" + filename + "\" not found or not accessible");
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
+		}
+		finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			}
+			catch (IOException e) {
+				System.out.println("Error! Input/Output exception");
+			}
 		}
 	}
 	
@@ -161,6 +175,9 @@ public class CollectionData {
 				writer.write(dragons.getLast().toString()+"\n");
 				writer.close();
 			}
+		}
+		catch (FileNotFoundException e) {
+			System.out.println("Error! File \"" + filename + "\" not found or not accessible");
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());

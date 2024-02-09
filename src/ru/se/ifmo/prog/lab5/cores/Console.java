@@ -113,10 +113,14 @@ public class Console {
 		{
 			try {	
 				ScriptReader scriptreader = new ScriptReader(filename);
-				String[] commands = scriptreader.readFile().split("\n");
-				for (int i = commands.length-1; i >= 0; i--) {
-					++stacksize;
-					commandsStack.offerFirst(commands[i]);
+				String inpfile = scriptreader.readFile();
+				if (inpfile != null)
+				{
+					String[] commands = inpfile.split("\n");
+					for (int i = commands.length-1; i >= 0; i--) {
+						++stacksize;
+						commandsStack.offerFirst(commands[i]);
+					}
 				}
 			}
 			catch (Exception e) {

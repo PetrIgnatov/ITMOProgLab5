@@ -13,21 +13,27 @@ public class ScriptReader {
 			reader = new InputStreamReader(inputStream);
 		}
 		catch (FileNotFoundException e) {
-			System.out.println("Error! File \"" + filename + "\" not found");
+			inputStream = null;
+			reader = null;
+			System.out.println("Error! File \"" + filename + "\" not found or not accessible");
 		}
 	}
 
 	public String readFile() {
-		int temp;
-		String file = "";
-		try {
-			while ((temp = reader.read()) != -1) {
-				file += (char)temp;
+		if (inputStream != null)
+		{
+			int temp;
+			String file = "";
+			try {
+				while ((temp = reader.read()) != -1) {
+					file += (char)temp;
+				}
 			}
+			catch (IOException e) {
+				System.out.println("Error! Something is wrong with file data");
+			}
+			return file;
 		}
-		catch (IOException e) {
-			System.out.println("Error! Something is wrong with file data");
-		}
-		return file;
+		return null;
 	}
 }
