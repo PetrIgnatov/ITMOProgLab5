@@ -2,6 +2,7 @@ package ru.se.ifmo.prog.lab5.cores;
 
 import java.util.*;
 import java.io.*;
+import java.awt.event.*;
 import ru.se.ifmo.prog.lab5.commands.*;
 import ru.se.ifmo.prog.lab5.classes.*;
 
@@ -33,7 +34,7 @@ public class Console {
 
 	public void print(String line)
 	{
-		if (line == null)
+		if (line.equals(null))
 		{
 			return;
 		}
@@ -42,7 +43,7 @@ public class Console {
 
 	public void println(String line)
 	{
-		if (line == null)
+		if (line.equals(null))
 		{
 			System.out.println();
 			return;
@@ -76,7 +77,7 @@ public class Console {
 			}
 		}
 	}
-	
+
 	public String readln() {
 		if (commandsStack.size() == 0) {
 			stacksize = 0;
@@ -109,7 +110,7 @@ public class Console {
 	}
 
 	public void readScript(String filename) {
-		if (stacksize < 100)
+		if (stacksize < 10000)
 		{
 			try {	
 				ScriptReader scriptreader = new ScriptReader(filename);

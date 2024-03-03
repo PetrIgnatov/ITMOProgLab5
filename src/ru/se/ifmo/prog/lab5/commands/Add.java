@@ -20,3 +20,4 @@ public class Add extends Command {
 		collectiondata.add(parameter);
 	}
 }
+

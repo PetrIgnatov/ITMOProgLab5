@@ -12,3 +12,4 @@ public class ExecuteScript extends Command {
 		console.readScript(args[1]);
 	}
 }
+

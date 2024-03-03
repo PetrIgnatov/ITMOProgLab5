@@ -16,7 +16,7 @@ public class CommandManager {
 	}
 
 	public void createCommand(String name, Command command) {
-		if (name == null || name == "^\s*$") {
+		if (name.equals(null) || name.equals("^\s*$")) {
 			throw new IllegalArgumentException("Error! Can't create command with name \"" + name + "\"");
 		}
 		commandList.put(name, command);
@@ -37,3 +37,4 @@ public class CommandManager {
 		throw new IllegalArgumentException("Error! Unknown command \"" + name + "\"");
 	}
 }
+

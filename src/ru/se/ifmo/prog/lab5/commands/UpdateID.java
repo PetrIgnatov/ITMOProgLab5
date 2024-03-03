@@ -16,6 +16,10 @@ public class UpdateID extends Command {
 			System.out.println("Error! Argument is not a number");
 			return;
 		}
+		int index = collectiondata.findById(Integer.parseInt(args[1]));
+		if (index == -1) {
+			throw new IllegalArgumentException("Error! Dragon with ID " + args[1] + " not found");
+		}
                 String[] parameter = new String[parametersAdvices.length];
                 for (int i = 0; i < parameter.length; ++i) {
                         console.print(parametersAdvices[i]);
@@ -24,6 +28,7 @@ public class UpdateID extends Command {
                                 throw new IllegalArgumentException("Error! Unable to use this input!");
                         }
                 }
-                collectiondata.update(parameter, Integer.parseInt(args[1]));
+                collectiondata.update(parameter, index, Integer.parseInt(args[1]));
         }
 }
+

@@ -173,7 +173,13 @@ public class CollectionData {
 					writer.write(dragons.get(i).toString()+"\n");
 				}
 				writer.write(dragons.getLast().toString()+"\n");
+			}
+			if (writer != null) {
 				writer.close();
+			}
+			if (outputStream != null) {
+				outputStream.flush();
+				outputStream.close();
 			}
 		}
 		catch (FileNotFoundException e) {
@@ -259,7 +265,7 @@ public class CollectionData {
 					throw new IOException("Error! Unknown character \"" + splitted[6] + "\"");
 			}
 			String format = "EEE MMM dd HH:mm:ss z yyyy";
-			SimpleDateFormat formater = new SimpleDateFormat(format, Locale.ENGLISH);
+			SimpleDateFormat formater = new SimpleDateFormat(format, Locale.FRENCH);
 			java.util.Date date = new java.util.Date();
 			if (splitted[0] == "") {
 				throw new IOException("Error! Name can't be null");
@@ -285,27 +291,27 @@ public class CollectionData {
 	}
 
 	public void add(String[] splitted) {
-		Dragon newDragon = createDragon(splitted, ++maxId);
+		Dragon newDragon = createDragon(splitted, maxId+1);
 		if (newDragon != null) {
 			dragons.add(newDragon);
+			++maxId;
 		}
 	}
-
-	public void update(String[] parameters, int id) {
-		try {
-			boolean found = false;
-			for (int i = 0; i < dragons.size(); ++i) {
-				if (dragons.get(i).getId() == id) {
-					Dragon newDragon = createDragon(parameters, id);
-					if (newDragon != null) {
-						dragons.set(i, newDragon);
-					}
-					found = true;
-					break;
-				}
+	
+	public int findById(int id) {
+		for (int i = 0; i < dragons.size(); ++i) {
+			if (dragons.get(i).getId() == id) {
+				return i;
 			}
-			if (!found) {
-				throw new IOException("Error! Dragon with ID " + id + " not found");
+		}
+		return -1;
+	}
+
+	public void update(String[] parameters, int ind, int id) {
+		try {
+			Dragon newDragon = createDragon(parameters, id);
+			if (newDragon != null) {
+				dragons.set(ind, newDragon);
 			}
 		}
 		catch (Exception e) {
@@ -357,3 +363,4 @@ public class CollectionData {
 		return "LinkedList<Dragon>;" + initDate.toString() + ";" + Integer.toString(dragons.size()) + " elements;";
 	}
 }
+
